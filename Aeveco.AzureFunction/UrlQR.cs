@@ -15,7 +15,7 @@ namespace Aeveco.AzureFunction
     {
         [FunctionName("UrlQR")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("URL HTTP trigger function processed a request.");
