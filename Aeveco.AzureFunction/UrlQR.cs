@@ -1,37 +1,37 @@
-using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using QRCoder;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace Aeveco.AzureFunction
 {
-    public static class WifiQR
+    public static class UrlQR
     {
-        [FunctionName("WifiQR")]
+        [FunctionName("UrlQR")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("URL HTTP trigger function processed a request.");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             // prefer the body or grab the name
-            string? wifiName = data?.wifiname ?? req.Query["wifiname"];
-            string? passcode = data?.passcode ?? req.Query["passcode"];
+            string? urlValue = data?.url ?? req.Query["url"];
 
-            if (string.IsNullOrEmpty(wifiName) || string.IsNullOrEmpty(passcode))
+            if (string.IsNullOrEmpty(urlValue))
             {
-                return new BadRequestObjectResult("Please supply a wifiname and a passcode");
+                return new BadRequestObjectResult("Please supply a url to encode");
             }
 
 
-            PayloadGenerator.WiFi generator = new(wifiName, passcode, PayloadGenerator.WiFi.Authentication.WPA);
+            PayloadGenerator.Url generator = new(urlValue);
             string payload = generator.ToString();
 
             QRCodeGenerator qrGenerator = new();
@@ -41,7 +41,6 @@ namespace Aeveco.AzureFunction
 
 
             return new FileContentResult(qrCodeAsPng, "image/png");
-
         }
     }
 }
