@@ -1,3 +1,6 @@
+using Aeveco.AzureFunction.Application.Models;
+using Aeveco.AzureFunction.Application.Validation;
+using Aeveco.AzureFunction.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -17,20 +20,16 @@ namespace Aeveco.AzureFunction
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            // grab the request form
+            var form = await req.GetJsonBody<WifiQRRequest, WifiQRRequestValidator>();
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            // prefer the body or grab the name
-            string? wifiName = data?.wifiname ?? req.Query["wifiname"];
-            string? passcode = data?.passcode ?? req.Query["passcode"];
-
-            if (string.IsNullOrEmpty(wifiName) || string.IsNullOrEmpty(passcode))
+            if (!form.IsValid)
             {
-                return new BadRequestObjectResult("Please supply a wifiname and a passcode");
+                log.LogInformation("Invalid form data.");
+                return form.ToBadRequest();
             }
 
-            PayloadGenerator.WiFi generator = new(wifiName, passcode, PayloadGenerator.WiFi.Authentication.WPA);
+            PayloadGenerator.WiFi generator = new(form.Value?.WifiName, form.Value?.Passcode, PayloadGenerator.WiFi.Authentication.WPA);
             string payload = generator.ToString();
 
             QRCodeGenerator qrGenerator = new();

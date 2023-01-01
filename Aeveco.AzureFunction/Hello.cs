@@ -21,7 +21,7 @@ namespace Aeveco.AzureFunction
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
+            dynamic? data = JsonConvert.DeserializeObject(requestBody);
 
             // prefer the body or grab the name
             string? name = data?.name ?? req.Query["name"];
