@@ -12,15 +12,21 @@ namespace Aeveco.AzureFunction.Application.Validation
     {
         public UrlQRRequestValidator()
         {
-            RuleFor(x => x.Url).NotEmpty().MinimumLength(10).Custom((val, context)=>{
-                if (!(val.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || val.StartsWith("http://", StringComparison.OrdinalIgnoreCase))) {
-                    context.AddFailure("Must stat with https:// or https://");
-                }
-                if (!Uri.TryCreate(val, UriKind.RelativeOrAbsolute, out Uri? myUri))
-                {
-                    context.AddFailure($"'{val}' is not a valid url.");
-                }
-            });
+            RuleFor(x => x.Url)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .MinimumLength(10)
+                .Custom((val, context)=>{
+                    // null is checked above and the cascade will not make it this far.
+                    if (!(val.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || val.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        context.AddFailure("Must stat with https:// or https://");
+                    }
+                    if (!Uri.TryCreate(val, UriKind.RelativeOrAbsolute, out Uri? myUri))
+                    {
+                        context.AddFailure($"'{val}' is not a valid url.");
+                    }
+                });
         }
     }
 }

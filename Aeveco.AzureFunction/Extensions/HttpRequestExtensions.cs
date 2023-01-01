@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Aeveco.AzureFunction.Application.Validation;
 using System.Collections.Generic;
 using FluentValidation.Results;
+using System.Web;
+using System.Linq;
 
 namespace Aeveco.AzureFunction.Extensions
 {
@@ -67,9 +69,24 @@ namespace Aeveco.AzureFunction.Extensions
         public static async Task<T?> GetJsonBody<T>(this HttpRequest request)
         {
             var requestBody = await request.ReadAsStringAsync();
+
             if (string.IsNullOrWhiteSpace(requestBody)) {
+                // check if the querystring can be used
+                if (request.QueryString.HasValue) {
+                    // convert to named value collection
+                    var nvc = HttpUtility.ParseQueryString(request.QueryString.Value);
+
+                    // convert to string that looks like json
+                    var queryStringObj = JsonConvert.SerializeObject(nvc.AllKeys.ToDictionary(k => k??"", k => nvc[k]));
+                    if (!string.IsNullOrWhiteSpace(queryStringObj)) {
+                        // throw it at the deserializer and see what matches
+                        return JsonConvert.DeserializeObject<T>(queryStringObj);
+                    }
+                }
+                // basically return null
                 return default;
             }
+
             return JsonConvert.DeserializeObject<T>(requestBody);
         }
     }

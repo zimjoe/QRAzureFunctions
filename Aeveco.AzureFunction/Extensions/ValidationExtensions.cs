@@ -19,7 +19,7 @@ namespace Aeveco.AzureFunction.Extensions
         public static BadRequestObjectResult ToBadRequest<T>(this ValidatableRequest<T> request)
         {
             if (request.Errors == null) {
-                return new BadRequestObjectResult("Unable to Validate Form Body");
+                return new BadRequestObjectResult("Unable to Validate Body JSON or the Querystring");
             }
             return new BadRequestObjectResult(request.Errors.Select(e => new {
                 Field = e.PropertyName,
