@@ -28,7 +28,7 @@ namespace Aeveco.AzureFunction.Extensions
             where V : AbstractValidator<T>, new()
         {
             var requestObject = await request.GetJsonBody<T>();
-            
+
             // if the requestObject is null
             if (requestObject == null) {
                 return new ValidatableRequest<T>
