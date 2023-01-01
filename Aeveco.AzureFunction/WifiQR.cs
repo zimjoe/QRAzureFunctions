@@ -30,7 +30,6 @@ namespace Aeveco.AzureFunction
                 return new BadRequestObjectResult("Please supply a wifiname and a passcode");
             }
 
-
             PayloadGenerator.WiFi generator = new(wifiName, passcode, PayloadGenerator.WiFi.Authentication.WPA);
             string payload = generator.ToString();
 
@@ -39,9 +38,7 @@ namespace Aeveco.AzureFunction
             PngByteQRCode qrCode = new(qrCodeData);
             var qrCodeAsPng = qrCode.GetGraphic(20);
 
-
             return new FileContentResult(qrCodeAsPng, "image/png");
-
         }
     }
 }
