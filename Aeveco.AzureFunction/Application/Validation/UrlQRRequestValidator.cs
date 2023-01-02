@@ -16,6 +16,7 @@ namespace Aeveco.AzureFunction.Application.Validation
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MinimumLength(10)
+                .MaximumLength(2048)
                 .Custom((val, context)=>{
                     // null is checked above and the cascade will not make it this far.
                     if (!(val.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || val.StartsWith("http://", StringComparison.OrdinalIgnoreCase)))
