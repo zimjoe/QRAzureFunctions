@@ -8,11 +8,12 @@ using System.Collections.Generic;
 using FluentValidation.Results;
 using System.Web;
 using System.Linq;
+using System;
 
 namespace Aeveco.AzureFunction.Extensions
 {
     /// <summary>
-    /// Totally swiped from theis great article
+    /// Totally swiped a lot of this from this great article
     /// https://www.tomfaltesek.com/azure-functions-input-validation/
     /// </summary>
     public static class HttpRequestExtensions
@@ -29,7 +30,24 @@ namespace Aeveco.AzureFunction.Extensions
         public static async Task<ValidatableRequest<T>> GetJsonBody<T, V>(this HttpRequest request)
             where V : AbstractValidator<T>, new()
         {
-            var requestObject = await request.GetJsonBody<T>();
+            T? requestObject;
+            // if an objecty fails to deserialize, then null it out and move on.  Probs need to figure out a better way
+            try
+            {
+                requestObject = await request.GetJsonBody<T>();
+            }
+            catch (Exception ex){
+                requestObject = default;
+                return new ValidatableRequest<T>
+                {
+                    Value = requestObject,
+                    IsValid = false,
+                    Errors = new List<ValidationFailure>() {
+                        new ValidationFailure("Message", ex.Message),
+                        new ValidationFailure("Length", request.ContentLength.ToString())
+                    }
+                };
+            }
 
             // if the requestObject is null
             if (requestObject == null) {
@@ -74,10 +92,10 @@ namespace Aeveco.AzureFunction.Extensions
                 // check if the querystring can be used
                 if (request.QueryString.HasValue) {
                     // convert to named value collection
-                    var nvc = HttpUtility.ParseQueryString(request.QueryString.Value);
+                    var nvc = HttpUtility.ParseQueryString(request.QueryString.Value ?? "");
 
                     // convert to string that looks like json
-                    var queryStringObj = JsonConvert.SerializeObject(nvc.AllKeys.ToDictionary(k => k??"", k => nvc[k]));
+                    var queryStringObj = JsonConvert.SerializeObject(nvc.AllKeys.ToDictionary(k => k??"", k => nvc[k]), Formatting.None);
                     if (!string.IsNullOrWhiteSpace(queryStringObj)) {
                         // throw it at the deserializer and see what matches
                         return JsonConvert.DeserializeObject<T>(queryStringObj);
@@ -86,7 +104,7 @@ namespace Aeveco.AzureFunction.Extensions
                 // basically return null
                 return default;
             }
-
+            //JsonConvert.DeserializeObject<T>()
             return JsonConvert.DeserializeObject<T>(requestBody);
         }
     }
