@@ -50,6 +50,41 @@ public class MailRequestValidatorTests
         response.ShouldHaveValidationErrorFor(x => x.Encoding);
     }
 
+    [Fact]
+    public void WrongEncoder_ReturnsValidationErrors()
+    {
+        // Arrange
+        MailQRRequest mailRequest = new()
+        {
+            Encoding = 4
+        };
+        // Act
+        var response = validator.TestValidate(mailRequest);
+
+        // Assert
+
+        response.ShouldHaveValidationErrorFor(x => x.Encoding);
+    }
+
+    /// <summary>
+    /// Intentional failed test to see if the rollout stops
+    /// </summary>
+    [Fact]
+    public void GoodEncoder_ValidationSucceeds()
+    {
+        // Arrange
+        MailQRRequest mailRequest = new()
+        {
+            Encoding = 0
+        };
+        // Act
+        var response = validator.TestValidate(mailRequest);
+
+        // Assert
+
+        response.ShouldHaveValidationErrorFor(x => x.Encoding);
+    }
+
     // test email values
     [Theory]
     [InlineData("test@test.com")]
