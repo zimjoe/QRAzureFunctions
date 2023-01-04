@@ -62,7 +62,7 @@ public class UrlQRRequestValidatorTests
     public void UrlIsOver2048Chars_ReturnsValidationErrors()
     {
         // Arrange
-        string val = $"https://{new string('a', 2049)}";
+        string val = new string('a', 2049);
         UrlQRRequest urlRequest = new()
         {
             Url = val

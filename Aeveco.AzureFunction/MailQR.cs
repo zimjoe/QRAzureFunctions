@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,23 +14,23 @@ using Aeveco.AzureFunction.Application.Validation;
 
 namespace Aeveco.AzureFunction
 {
-    public static class UrlQR
+    public static class MailQR
     {
-        [FunctionName("UrlQR")]
+        [FunctionName("MailQR")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             // grab the request form
-            var form = await req.GetJsonBody<UrlQRRequest, UrlQRRequestValidator>();
+            var form = await req.GetJsonBody<MailQRRequest, MailQRRequestValidator>();
 
             if (!form.IsValid)
             {
                 log.LogInformation("Invalid form data.");
                 return form.ToBadRequest();
             }
-
-            PayloadGenerator.Url generator = new(form.Value?.Url);
+            // this is a little hacky, but not sending the empty strings caused a generation error.  Didn't want to "require" fields
+            PayloadGenerator.Mail generator = new(form.Value?.MailReceiver, form.Value?.Subject ?? "", form.Value?.Message ?? "", MailQRRequest.GetEncoding(form.Value?.Encoding));
 
             string payload = generator.ToString();
 

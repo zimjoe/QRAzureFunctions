@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Aeveco.FunctionTests;
 
-namespace Aeveco.FunctionTests;
 public class WifiQRRequestValidatorTests
 {
     readonly WifiQRRequestValidator validator = new();
