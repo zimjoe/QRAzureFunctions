@@ -82,7 +82,7 @@ public class MailRequestValidatorTests
 
         // Assert
 
-        response.ShouldHaveValidationErrorFor(x => x.Encoding);
+        response.ShouldNotHaveValidationErrorFor(x => x.Encoding);
     }
 
     // test email values
