@@ -26,13 +26,13 @@ public class WifiQRRequestValidatorTests
     }
 
     [Fact]
-    public void PasscodeUnder16Chars_ReturnsValidationErrors()
+    public void PasscodeUnder12Chars_ReturnsValidationErrors()
     {
         // Arrange
         WifiQRRequest wifiRequest = new()
         {
             WifiName = new string('a', 1),
-            Passcode = new string('a', 15)
+            Passcode = new string('a', 11)
         };
         // Act
         var response = validator.TestValidate(wifiRequest);
