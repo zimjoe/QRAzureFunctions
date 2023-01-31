@@ -31,7 +31,7 @@ public class WifiQRRequestValidatorTests
         // Arrange
         WifiQRRequest wifiRequest = new()
         {
-            WifiName = new string('a', 1),
+            WifiName = new string('a', 5),
             Passcode = new string('a', 11)
         };
         // Act
@@ -41,18 +41,49 @@ public class WifiQRRequestValidatorTests
         response.ShouldHaveValidationErrorFor(x => x.Passcode);
     }
     [Fact]
-    public void PasscodeOver200Chars_ReturnsValidationErrors()
+    public void PasscodeOver64Chars_ReturnsValidationErrors()
     {
         // Arrange
         WifiQRRequest wifiRequest = new()
         {
-            WifiName = new string('a', 1),
-            Passcode = new string('a', 201)
+            WifiName = new string('a', 5),
+            Passcode = new string('a', 65)
         };
         // Act
         var response = validator.TestValidate(wifiRequest);
 
         // Assert
         response.ShouldHaveValidationErrorFor(x => x.Passcode);
+    }
+
+    [Fact]
+    public void WifiNameUnder4Chars_ReturnsValidationErrors()
+    {
+        // Arrange
+        WifiQRRequest wifiRequest = new()
+        {
+            WifiName = new string('a', 3),
+            Passcode = new string('a', 15)
+        };
+        // Act
+        var response = validator.TestValidate(wifiRequest);
+
+        // Assert
+        response.ShouldHaveValidationErrorFor(x => x.WifiName);
+    }
+    [Fact]
+    public void WifiNameOver64Chars_ReturnsValidationErrors()
+    {
+        // Arrange
+        WifiQRRequest wifiRequest = new()
+        {
+            WifiName = new string('a', 65),
+            Passcode = new string('a', 64)
+        };
+        // Act
+        var response = validator.TestValidate(wifiRequest);
+
+        // Assert
+        response.ShouldHaveValidationErrorFor(x => x.WifiName);
     }
 }

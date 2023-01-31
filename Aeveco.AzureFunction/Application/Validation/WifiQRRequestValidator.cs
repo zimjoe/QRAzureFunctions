@@ -13,6 +13,7 @@ namespace Aeveco.AzureFunction.Application.Validation
         public WifiQRRequestValidator()
         {
             RuleFor(x => x.WifiName).NotEmpty()
+                .MinimumLength(4).WithMessage("Use a minimum of 4 characters.")
                 .MaximumLength(64).WithMessage("Limited to 64 chars.");
             // not sure that I should be forcing some validation
             RuleFor(x => x.Passcode).NotEmpty()
