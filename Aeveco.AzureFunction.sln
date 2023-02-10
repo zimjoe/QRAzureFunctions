@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aeveco.AzureFunction", "Aeveco.AzureFunction\Aeveco.AzureFunction.csproj", "{B1E0729E-5136-4A63-A1CB-3034273BA96B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aeveco.FunctionTests", "FunctionTests\Aeveco.FunctionTests.csproj", "{E2C196C6-58C0-4EFF-845B-B8484735C120}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aeveco.FunctionTests", "FunctionTests\Aeveco.FunctionTests.csproj", "{E2C196C6-58C0-4EFF-845B-B8484735C120}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

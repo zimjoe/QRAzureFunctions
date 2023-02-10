@@ -1,6 +1,6 @@
 ﻿namespace Aeveco.FunctionTests;
 
-public class MailRequestValidatorTests
+public class MailQRRequestValidatorTests
 {
     readonly MailQRRequestValidator validator = new();
 
