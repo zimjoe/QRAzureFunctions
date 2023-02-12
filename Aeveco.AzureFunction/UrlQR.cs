@@ -24,13 +24,13 @@ namespace Aeveco.AzureFunction
             // grab the request form
             var form = await req.GetJsonBody<UrlQRRequest, UrlQRRequestValidator>();
 
-            if (!form.IsValid)
+            if (!form.IsValid || form.Value == null)
             {
                 log.LogInformation("Invalid form data.");
                 return form.ToBadRequest();
             }
 
-            PayloadGenerator.Url generator = new(form.Value?.Url);
+            PayloadGenerator.Url generator = new(form.Value.Url);
 
             string payload = generator.ToString();
 

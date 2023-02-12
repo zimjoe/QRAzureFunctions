@@ -23,13 +23,13 @@ namespace Aeveco.AzureFunction
             // grab the request form
             var form = await req.GetJsonBody<WifiQRRequest, WifiQRRequestValidator>();
 
-            if (!form.IsValid)
+            if (!form.IsValid || form.Value == null)
             {
                 log.LogInformation("Invalid form data.");
                 return form.ToBadRequest();
             }
 
-            PayloadGenerator.WiFi generator = new(form.Value?.WifiName, form.Value?.Passcode, PayloadGenerator.WiFi.Authentication.WPA);
+            PayloadGenerator.WiFi generator = new(form.Value.WifiName, form.Value.Passcode, PayloadGenerator.WiFi.Authentication.WPA);
             string payload = generator.ToString();
 
             QRCodeGenerator qrGenerator = new();

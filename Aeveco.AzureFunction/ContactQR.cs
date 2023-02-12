@@ -11,18 +11,19 @@ using Aeveco.AzureFunction.Application.Models;
 using Aeveco.AzureFunction.Application.Validation;
 using Aeveco.AzureFunction.Extensions;
 using QRCoder;
+using static QRCoder.PayloadGenerator.ContactData;
 
 namespace Aeveco.AzureFunction
 {
-    public static class TextMessageQR
+    public static class ContactQR
     {
-        [FunctionName("TextMessageQR")]
+        [FunctionName("ContactQR")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             // grab the request form
-            var form = await req.GetJsonBody<TextMessageQRRequest, TextMessageQRRequestValidator>();
+            var form = await req.GetJsonBody<ContactQRRequest, ContactQRRequestValidator>();
 
             if (!form.IsValid || form.Value == null)
             {
@@ -30,8 +31,29 @@ namespace Aeveco.AzureFunction
                 return form.ToBadRequest();
             }
 
-            PayloadGenerator.SMS generator = new(form.Value.ToNumber, form.Value.Message, PayloadGenerator.SMS.SMSEncoding.SMS);
-
+            PayloadGenerator.ContactData generator = new(
+                form.Value.ContactOutput, 
+                form.Value.FirstName, 
+                form.Value.LastName,
+                form.Value.NickName,
+                form.Value.Phone,
+                form.Value.MobilePhone,
+                form.Value.WorkPhone,
+                form.Value.Email, 
+                form.Value.Birthday, 
+                form.Value.Website, 
+                form.Value.Street, 
+                form.Value.HouseNumber, 
+                form.Value.City, 
+                form.Value.ZipCode, 
+                form.Value.Country, 
+                form.Value.Note, 
+                form.Value.StateRegion, 
+                form.Value.AddressOrderType, 
+                form.Value.Organization, 
+                form.Value.Title
+            );
+            
             string payload = generator.ToString();
 
             QRCodeGenerator qrGenerator = new();

@@ -24,14 +24,14 @@ namespace Aeveco.AzureFunction
             // grab the request form
             var form = await req.GetJsonBody<PlainTextQRRequest, PlainTextQRRequestValidator>();
 
-            if (!form.IsValid)
+            if (!form.IsValid || form.Value == null)
             {
                 log.LogInformation("Invalid form data.");
                 return form.ToBadRequest();
             }
           
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(form.Value?.Text, QRCodeGenerator.ECCLevel.Q);
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(form.Value.Text, QRCodeGenerator.ECCLevel.Q);
 
             PngByteQRCode qrCode = new(qrCodeData);
             var qrCodeAsPng = qrCode.GetGraphic(20);

@@ -24,13 +24,13 @@ namespace Aeveco.AzureFunction
             // grab the request form
             var form = await req.GetJsonBody<MailQRRequest, MailQRRequestValidator>();
 
-            if (!form.IsValid)
+            if (!form.IsValid || form.Value == null)
             {
                 log.LogInformation("Invalid form data.");
                 return form.ToBadRequest();
             }
             // this is a little hacky, but not sending the empty strings caused a generation error.  Didn't want to "require" fields
-            PayloadGenerator.Mail generator = new(form.Value?.MailReceiver, form.Value?.Subject ?? "", form.Value?.Message ?? "", MailQRRequest.GetEncoding(form.Value?.Encoding));
+            PayloadGenerator.Mail generator = new(form.Value.MailReceiver, form.Value.Subject ?? "", form.Value.Message ?? "", MailQRRequest.GetEncoding(form.Value.Encoding));
 
             string payload = generator.ToString();
 
