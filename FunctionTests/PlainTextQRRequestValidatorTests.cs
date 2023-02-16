@@ -46,10 +46,10 @@ namespace Aeveco.FunctionTests
         }
 
         [Fact]
-        public void TextIsOver2048Chars_ReturnsValidationErrors()
+        public void TextIsOver500Chars_ReturnsValidationErrors()
         {
             // Arrange
-            string val = new string('a', 2049);
+            string val = new string('a', 501);
             PlainTextQRRequest textRequest = new()
             {
                 Text = val

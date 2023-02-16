@@ -14,7 +14,7 @@ namespace Aeveco.AzureFunction.Application.Validation;
         RuleFor(x => x.Text)
             .NotEmpty()
             .MinimumLength(2)
-            .MaximumLength(2048);
+            .MaximumLength(500);
     }
 }
 
