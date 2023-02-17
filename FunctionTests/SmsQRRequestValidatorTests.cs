@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Aeveco.FunctionTests
 {
-    public class TextMessageQRRequestValidatorTests
+    public class SmsQRRequestValidatorTests
     {
-        readonly TextMessageQRRequestValidator validator = new();
+        readonly SmsQRRequestValidator validator = new();
 
         [Theory]
         [InlineData(null, null)]
@@ -18,7 +18,7 @@ namespace Aeveco.FunctionTests
         public void FieldsEmpty_ReturnsValidationErrors(string wifiName, string passcode)
         {
             // Arrange
-            TextMessageQRRequest request = new()
+            SmsQRRequest request = new()
             {
                 ToNumber = wifiName,
                 Message = passcode
@@ -35,7 +35,7 @@ namespace Aeveco.FunctionTests
         public void ToNumberUnder2Chars_ReturnsValidationErrors()
         {
             // Arrange
-            TextMessageQRRequest request = new()
+            SmsQRRequest request = new()
             {
                 ToNumber = new string('a', 1)
             };
@@ -49,7 +49,7 @@ namespace Aeveco.FunctionTests
         public void ToNumberOver25Chars_ReturnsValidationErrors()
         {
             // Arrange
-            TextMessageQRRequest request = new()
+            SmsQRRequest request = new()
             {
                 ToNumber = new string('a', 26)
             };
@@ -63,7 +63,7 @@ namespace Aeveco.FunctionTests
         public void MessageOver144Chars_ReturnsValidationErrors()
         {
             // Arrange
-            TextMessageQRRequest request = new()
+            SmsQRRequest request = new()
             {
                 ToNumber = new string('a', 12),
                 Message = new string('a', 145)

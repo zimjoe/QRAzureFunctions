@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Aeveco.AzureFunction.Application.Validation
 {
-    public class TextMessageQRRequestValidator : AbstractValidator<TextMessageQRRequest>
+    public class SmsQRRequestValidator : AbstractValidator<SmsQRRequest>
     {
-        public TextMessageQRRequestValidator()
+        public SmsQRRequestValidator()
         {
             // not sure that I should be forcing some number validation
             RuleFor(x => x.ToNumber)

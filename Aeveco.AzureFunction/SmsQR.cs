@@ -14,15 +14,15 @@ using QRCoder;
 
 namespace Aeveco.AzureFunction
 {
-    public static class TextMessageQR
+    public static class SmsQR
     {
-        [FunctionName("TextMessageQR")]
+        [FunctionName("SmsQR")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             // grab the request form
-            var form = await req.GetJsonBody<TextMessageQRRequest, TextMessageQRRequestValidator>();
+            var form = await req.GetJsonBody<SmsQRRequest, SmsQRRequestValidator>();
 
             if (!form.IsValid || form.Value == null)
             {

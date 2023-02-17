@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aeveco.AzureFunction.Application.Models
 {
-    public class TextMessageQRRequest
+    public class SmsQRRequest
     {
         public string? ToNumber { get; set; }
         public string? Message { get; set; }
