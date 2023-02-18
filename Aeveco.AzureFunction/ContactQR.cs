@@ -32,26 +32,26 @@ namespace Aeveco.AzureFunction
             }
 
             PayloadGenerator.ContactData generator = new(
-                form.Value.ContactOutput, 
-                form.Value.FirstName, 
+                form.Value.ContactOutput,
+                form.Value.FirstName,
                 form.Value.LastName,
-                form.Value.NickName,
-                form.Value.Phone,
-                form.Value.MobilePhone,
-                form.Value.WorkPhone,
-                form.Value.Email, 
-                form.Value.Birthday, 
-                form.Value.Website, 
-                form.Value.Street, 
-                form.Value.HouseNumber, 
-                form.Value.City, 
-                form.Value.ZipCode, 
-                form.Value.Country, 
-                form.Value.Note, 
-                form.Value.StateRegion, 
-                form.Value.AddressOrderType, 
-                form.Value.Organization, 
-                form.Value.Title
+                form.Value.NickName.NullIfEmpty(),
+                form.Value.Phone.NullIfEmpty(),
+                form.Value.MobilePhone.NullIfEmpty(),
+                form.Value.WorkPhone.NullIfEmpty(),
+                form.Value.Email.NullIfEmpty(),
+                form.Value.Birthday,
+                form.Value.Website.NullIfEmpty(),
+                form.Value.Street.NullIfEmpty(),
+                form.Value.HouseNumber.NullIfEmpty(),
+                form.Value.City.NullIfEmpty(),
+                form.Value.ZipCode.NullIfEmpty(),
+                form.Value.Country.NullIfEmpty(),
+                form.Value.Note.NullIfEmpty(),
+                form.Value.StateRegion.NullIfEmpty(),
+                form.Value.AddressOrderType,
+                form.Value.Organization.NullIfEmpty(),
+                form.Value.Title.NullIfEmpty()
             );
             
             string payload = generator.ToString();
